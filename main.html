@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>С 8 марта! 🌸</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: radial-gradient(
+					circle at center,
+					#ffccd5,
+					#ff99ac,
+					#ff6699
+				);
+				overflow: hidden;
+				font-family: 'Segoe UI', sans-serif;
+			}
+
+			.container {
+				position: relative;
+				z-index: 1;
+				text-align: center;
+			}
+
+			.text {
+				font-size: 3em;
+				color: #fff;
+				text-shadow: 0 0 20px rgba(255, 105, 145, 0.8),
+					0 0 40px rgba(255, 105, 145, 0.5);
+				animation: glow 2s infinite alternate;
+				padding: 20px;
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 100px;
+				backdrop-filter: blur(10px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+				cursor: pointer;
+				user-select: none;
+			}
+
+			/* Частицы фона */
+			.particle {
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				background: rgba(255, 255, 255, 0.7);
+				border-radius: 100%;
+				animation: floatParticle 8s infinite;
+			}
+
+			/* Сердечки */
+			.heart {
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				background: #ff6f91;
+				transform: rotate(-45deg);
+				animation: flyHeart 1.5s ease-out forwards;
+			}
+
+			.heart::before,
+			.heart::after {
+				content: '';
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				background: #ff6f91;
+				border-radius: 50%;
+			}
+
+			.heart::before {
+				top: -10px;
+				left: 0;
+			}
+			.heart::after {
+				left: 10px;
+				top: 0;
+			}
+
+			@keyframes glow {
+				0% {
+					text-shadow: 0 0 10px rgba(255, 105, 145, 0.8),
+						0 0 20px rgba(255, 105, 145, 0.5);
+				}
+				100% {
+					text-shadow: 0 0 20px rgba(255, 105, 145, 1),
+						0 0 40px rgba(255, 105, 145, 0.8);
+				}
+			}
+
+			@keyframes bloom {
+				0%,
+				100% {
+					transform: scale(0.8) rotate(0deg);
+					opacity: 0.7;
+				}
+				50% {
+					transform: scale(1.2) rotate(15deg);
+					opacity: 1;
+				}
+			}
+
+			@keyframes floatParticle {
+				0% {
+					transform: translateY(0) scale(1);
+					opacity: 1;
+				}
+				100% {
+					transform: translateY(-100vh) scale(0.5);
+					opacity: 0;
+				}
+			}
+
+			@keyframes flyHeart {
+				0% {
+					opacity: 1;
+					transform: translate(0, 0) rotate(-45deg) scale(1);
+				}
+				100% {
+					opacity: 0;
+					transform: translate(var(--x), var(--y)) rotate(-45deg) scale(0.5);
+				}
+			}
+
+			/* Медиа-запросы для мобильных устройств */
+			@media (max-width: 600px) {
+				.text {
+					padding: 15px;
+					font-size: 26px;
+					margin: 0 45px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="text">С 8 марта от твоего программистика 🥰</div>
+		</div>
+
+		<script>
+			// Генерация частиц фона
+			function createParticle() {
+				const particle = document.createElement('div');
+				particle.classList.add('particle');
+				particle.style.left = Math.random() * 100 + 'vw';
+				particle.style.animationDuration = Math.random() * 4 + 4 + 's';
+				document.body.appendChild(particle);
+				setTimeout(() => particle.remove(), 8000);
+			}
+			setInterval(createParticle, 300);
+
+			// Анимация появления текста
+			const text = document.querySelector('.text');
+			text.style.opacity = 0;
+			text.style.transform = 'translateY(50px)';
+			setTimeout(() => {
+				text.style.transition = 'all 1.5s ease-in-out';
+				text.style.opacity = 1;
+				text.style.transform = 'translateY(0)';
+			}, 500);
+
+			// Интерактивность при наведении
+			text.addEventListener('mouseover', () => {
+				text.style.transform = 'scale(1.2)';
+				text.style.background = 'rgba(255, 255, 255, 0.2)';
+			});
+			text.addEventListener('mouseout', () => {
+				text.style.transform = 'scale(1)';
+				text.style.background = 'rgba(255, 255, 255, 0.1)';
+			});
+
+			// Генерация сердечек при клике
+			text.addEventListener('click', e => {
+				const rect = text.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2;
+				const centerY = rect.top + rect.height / 2;
+
+				for (let i = 0; i < 40; i++) {
+					const heart = document.createElement('div');
+					heart.classList.add('heart');
+					heart.style.left = centerX + 'px';
+					heart.style.top = centerY + 'px';
+
+					// Случайные направления для сердец
+					const angle = Math.random() * 4 * Math.PI;
+					const distance = Math.random() * 350 + 150; // Дальность полета
+					const x = Math.cos(angle) * distance;
+					const y = Math.sin(angle) * distance;
+
+					heart.style.setProperty('--x', `${x}px`);
+					heart.style.setProperty('--y', `${y}px`);
+
+					document.body.appendChild(heart);
+					setTimeout(() => heart.remove(), 1500); // Удаляем через 1.5 секунды
+				}
+			});
+		</script>
+	</body>
+</html>
